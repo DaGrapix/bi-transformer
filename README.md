@@ -63,11 +63,6 @@ if not os.path.isdir(directory_name):
     af.dataset.download(root = ".", file_name = directory_name, unzip = True, OpenFOAM = False)
 ```
 
-### Install torch-uncertainty
-```sh
-pip install torch-uncertainty
-```
-
 ## The team
 - Anthony Kalaydjian, Master student @ ENSTA/EPFL - anthony.kalaydjian@epfl.ch
 - Anton Balykov, Master student @ EPFL - anton.balykov@epfl.ch
