@@ -63,6 +63,20 @@ if not os.path.isdir(directory_name):
     af.dataset.download(root = ".", file_name = directory_name, unzip = True, OpenFOAM = False)
 ```
 
+
+## Running the model
+
+The folder must have this configuration:
++---Dataset/
++---LIPS/
++---src/
+    +---models/
+        +---bi_transformer/
+            +---my_custom_transformer.py
+            +---parameters.json
+    +---my_ingestion.py
+    +---run.py
+
 ## The team
 - Anthony Kalaydjian, Master student @ ENSTA/EPFL - anthony.kalaydjian@epfl.ch
 - Anton Balykov, Master student @ EPFL - anton.balykov@epfl.ch
