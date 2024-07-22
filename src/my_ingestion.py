@@ -280,11 +280,7 @@ def run_model(src_dir, model_path, BENCHMARK_PATH, verbose=True):
                     save_path=LOAD_PATH, 
                     **run_parameters["training_config"]
                     )
-        # try:
-        #     simulator.save(save_path=LOAD_PATH)
-        #     print("Model saved")
-        # except:
-        #     print("Could not save model")
+	    
         training_time = time.time() - start
         
 
