@@ -1,6 +1,6 @@
 # Subsampled Bi-Transformer Surrogate Models for Flow Estimation Arround Airfoil Geometries
 
-This repository shows an original model adapted from Transformers [[1]](#1) for solving the RANS equations, based on the LIPS framework [[3]](#3) and the Airfrans Dataset [[4]](#4).
+This repository shows an original model adapted from Transformers [[1]](#1) for solving the RANS equations, based on the LIPS framework [[2]](#2) and the Airfrans Dataset [[3]](#3).
 
 The study provided here is part of the ML4physim challenge hosted by IRT-Systemx (see [Codabench page](https://www.codabench.org/competitions/1534/)).
 CFD simulations being very costly, the use of data-driven surrogate models can be useful to optimize the shape of airfoils without paying the cost of expensive simulations.
@@ -91,11 +91,8 @@ to run the model, simply run `python run.py [model_directory]`.
 <a id="1">[1]</a> 
 Attention Is All You Need, A. Vaswani et al. (2017). 
 
-<a id="2">[2]</a> 
-Packed-Ensembles for Efficient Uncertainty Estimation, O. Laurent et al. (2023). 
-
-<a id="3">[3]</a> 
+<a id="3">[2]</a> 
 LIPS - Learning Industrial Physical Simulation benchmark suite, M. Leyli Abadi et al. (2022).
 
-<a id="4">[4]</a> 
+<a id="4">[3]</a> 
 AirfRANS: High Fidelity Computational Fluid Dynamics Dataset for Approximating Reynolds-Averaged Navier-Stokes Solutions, F. Bonnet et al. (2023).
