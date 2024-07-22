@@ -66,7 +66,7 @@ if not os.path.isdir(directory_name):
 
 ## Running the model
 
-The folder must have this configuration:
+Make sure your repository has the following form:
 ```{bash}
 +---Dataset/
 +---LIPS/
