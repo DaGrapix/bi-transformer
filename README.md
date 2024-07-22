@@ -77,6 +77,8 @@ The folder must have this configuration:
     +---my_ingestion.py
     +---run.py
 
+to run the model, simply run `python run.py [model_directory]`.
+
 ## The team
 - Anthony Kalaydjian, Master student @ ENSTA/EPFL - anthony.kalaydjian@epfl.ch
 - Anton Balykov, Master student @ EPFL - anton.balykov@epfl.ch
