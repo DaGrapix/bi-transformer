@@ -5,7 +5,7 @@ This repository shows an original model adapted from Transformers [[1]](#1) for 
 The study provided here is part of the ML4physim challenge hosted by IRT-Systemx (see [Codabench page](https://www.codabench.org/competitions/1534/)).
 CFD simulations being very costly, the use of data-driven surrogate models can be useful to optimize the shape of airfoils without paying the cost of expensive simulations.
 
-##Subsampled Bi-Transformer models:
+## Subsampled Bi-Transformer models:
 which are modified version of transformer networks, where for each simulations, the query tokens are only attended to a subsampled set of key tokens from the pointcloud of the simulation which we call the skeleton of the mesh. The best model's implementation is locateed in the `subsampled_bi_transformers/bi_transformer` folder, and can be ran using the `run.py` file.
 
 This model got us the $4^{\text{th}}$ place in this challenge!
