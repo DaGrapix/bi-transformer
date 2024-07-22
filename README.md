@@ -67,6 +67,7 @@ if not os.path.isdir(directory_name):
 ## Running the model
 
 The folder must have this configuration:
+```{bash}
 +---Dataset/
 +---LIPS/
 +---src/
@@ -76,7 +77,7 @@ The folder must have this configuration:
             +---parameters.json
     +---my_ingestion.py
     +---run.py
-
+```
 to run the model, simply run `python run.py [model_directory]`.
 
 ## The team
