@@ -182,8 +182,6 @@ class Ransformer(torch.nn.Module):
         self.transf1 = TransformerBlock(32, 32, yDIM=32, layers=[32, 64, 64, 64, 32])
         self.transf2 = TransformerBlock(32, 32, yDIM=32, layers=[32, 64, 64, 64, 32])
         self.transf3 = TransformerBlock(32, 32, yDIM=32, layers=[32, 64, 64, 64, 32])
-        #self.transf4 = TransformerBlock(32, 32, yDIM=32, layers=[32, 64, 64, 64, 32])
-        #self.transf5 = TransformerBlock(32, 32, yDIM=32, layers=[32, 64, 64, 64, 32])
 
         self.decoder = torch.nn.Sequential(
             Linear(32, 64),
@@ -380,8 +378,6 @@ def global_train(device, train_dataset, network, hparams, criterion = 'L1Smooth'
 
     pbar_train = tqdm(range(hparams['nb_epochs']), position=0)
     epoch_nb = 0
-
-    # min_batch_size = calculate_min_batch_size(train_dataset, hparams['batch_size'])
 
     # If we don't have a subsampling value, we use the whole dataset
     if hparams['subsampling'] == "None":
