@@ -30,3 +30,4 @@ RUN pip install torch_geometric --break-system-packages
 # Download the dataset
 COPY get_dataset.py get_dataset.py
 RUN python3 get_dataset.py
+RUN rm Dataset.zip
