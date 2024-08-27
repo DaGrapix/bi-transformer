@@ -40,8 +40,90 @@ class ModelApiError(Exception):
 class TimeoutException(Exception):
     """timeoutexception"""
 
+import joblib
+from lips.benchmark.airfransBenchmark import AirfRANSBenchmark, AirfRANSDataSet
+def load_benchmark(benchmark_dir, directory_name, bench_config_path, benchmark_name, log_path, regime: str="scarce") -> AirfRANSBenchmark:
+    """
+    Load the benchmark object from the sav file if it exists, otherwise create a new one
 
-def run_model(src_dir, model_path, BENCHMARK_PATH, verbose=True):
+    Args:
+        regime (str): The regime of the benchmark, either "scarce" or "full"
+    """
+
+    if not os.path.exists(benchmark_dir):
+        os.makedirs(benchmark_dir)
+
+    if regime=="scarce":
+        # scarce data regime benchmark loading
+        benchmark_save_path = os.path.join(benchmark_dir, "benchmark_scarce.sav")
+        try:
+            benchmark = joblib.load(benchmark_save_path)
+            print(f"Successfully loaded {regime} benchmark saved file!")
+        except:
+            print(f"Coundn't load sav files, creating new {regime} benchmark...")
+            benchmark=AirfRANSBenchmark(benchmark_path = directory_name,
+                                        config_path = bench_config_path,
+                                        benchmark_name = benchmark_name,
+                                        log_path = log_path)
+            benchmark.load(path=directory_name)
+            joblib.dump(benchmark, benchmark_save_path)
+    elif regime=="full":
+        # full data regime benchmark loading
+        benchmark_save_path = os.path.join(benchmark_dir, "benchmark_full.sav")
+
+        benchmark=AirfRANSBenchmark(benchmark_path = directory_name,
+                                        config_path = bench_config_path,
+                                        benchmark_name = benchmark_name,
+                                        log_path = log_path)
+
+        try:
+            benchmark = joblib.load(benchmark_save_path)
+            print(f"Successfully loaded {regime} benchmark saved file!")
+        except:
+            print(f"Coundn't load sav files, creating new {regime} benchmark...")
+            attr_names = benchmark.config.get_option("attr_x") + \
+                                benchmark.config.get_option("attr_y")
+
+            print(f"Loading {regime} datasets...")
+            full_train = AirfRANSDataSet(name = "full",
+                                            config = benchmark.config,
+                                            attr_names = attr_names,
+                                            task = 'full',
+                                            split = "training",
+                                            log_path = log_path
+            )
+            full_test = AirfRANSDataSet(name = "full",
+                                            config = benchmark.config,
+                                            attr_names = attr_names,
+                                            task = 'full',
+                                            split = "testing",
+                                            log_path = log_path
+            )
+            full_test_ood = AirfRANSDataSet(name = "test_ood",
+                                            config = benchmark.config,
+                                            attr_names = attr_names,
+                                            task = 'reynolds',
+                                            split = "testing",
+                                            log_path = log_path
+            )
+
+            full_train.load(path=directory_name)
+            full_test.load(path=directory_name)
+            full_test_ood.load(path=directory_name)
+            print("Succesfully loaded the datasets!")
+            
+            benchmark.train_dataset = full_train
+            benchmark._test_dataset = full_test
+            benchmark._test_ood_dataset = full_test_ood
+
+            print(f"Saving {regime} benchmark...")
+            joblib.dump(benchmark, benchmark_save_path)
+
+    print(f"Benchmark {regime} loaded successfully!")
+    return benchmark
+
+
+def run_model(src_dir, model_path, benchmark_dir, regime, verbose=True):
     #### Check whether everything went well (no time exceeded)
     execution_success = True
 
@@ -80,12 +162,11 @@ def run_model(src_dir, model_path, BENCHMARK_PATH, verbose=True):
     # dataset recovered from host
     DIRECTORY_NAME = os.path.join(src_dir, "..", "Dataset")
     BENCHMARK_NAME = "Case1"
-    LOG_PATH = os.path.join(src_dir, "lips_logs.log")
+    log_dir = os.path.join(src_dir, "logs")
+    if not os.path.exists(log_dir): os.makedirs(log_dir)
+    LOG_PATH = os.path.join(log_dir, "lips_logs.log")
     BENCH_CONFIG_PATH = os.path.join(src_dir, "..", "LIPS","configurations","airfoil","benchmarks","confAirfoil.ini") #Configuration file related to the benchmark
-    SIM_CONFIG_PATH = os.path.join(submission_dir, "config.ini")
-    SAVE_PATH = os.path.join(output_dir, "Model")
-    
-    # FIXME: if evaluateonly true : copy results for evaluation, deactivate option for competition phase
+    SIM_CONFIG_PATH = os.path.join(submission_dir, "config.ini")    
 
     if run_parameters["scoringonly"]:
         print("Scoring only mode activated")
@@ -111,22 +192,8 @@ def run_model(src_dir, model_path, BENCHMARK_PATH, verbose=True):
         exit(1)
 
     # Loading benchmark
-    from lips.benchmark.airfransBenchmark import AirfRANSBenchmark
-    import joblib
-    
     print("Preparing benchmark")
-    try:
-        with open(BENCHMARK_PATH, 'rb') as f:
-            benchmark = joblib.load(f)
-        print("Imported benchmark using joblib!")
-    except:
-        benchmark = AirfRANSBenchmark(benchmark_path=DIRECTORY_NAME,
-                                    config_path=BENCH_CONFIG_PATH,
-                                    benchmark_name=BENCHMARK_NAME,
-                                    log_path=LOG_PATH)
-        benchmark.load(path=DIRECTORY_NAME)
-        with open(BENCHMARK_PATH, 'wb') as f:
-            joblib.dump(benchmark, f)
+    benchmark = load_benchmark(benchmark_dir, DIRECTORY_NAME, BENCH_CONFIG_PATH, BENCHMARK_NAME, LOG_PATH, regime=regime)
     
 
     print("Input attributes (features): ", benchmark.config.get_option("attr_x"))
